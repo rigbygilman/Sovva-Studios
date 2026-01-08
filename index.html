@@ -4,107 +4,135 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sovva Studios</title>
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+
 body{
   background:
     radial-gradient(circle at top,#4169e133,#000 65%),
     url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3RveDdhNDdsN2hobmxoMjA2eTF4c3g0eWt3bWh4eHh4MHFneHF2ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/jaOXKCxtBPLieRLI0c/giphy.gif')
     center/cover fixed;
-  font-family:'Segoe UI',Tahoma,Verdana,Geneva,sans-serif;
+  font-family:'Segoe UI',Tahoma,Verdana,sans-serif;
   color:#4169e1;
   text-align:center;
   overflow-x:hidden;
 }
+
 h1{
   margin-top:22vh;
-  font-size:3.3em;
-  letter-spacing:3px;
-  text-shadow:0 0 15px #4169e1,0 0 50px #0000ff;
+  font-size:3.6em;
+  letter-spacing:4px;
+  text-shadow:0 0 20px #4169e1,0 0 80px #0000ff;
   animation:float 4s ease-in-out infinite;
 }
+
 .btn{
-  margin:6px;
-  padding:14px 36px;
+  margin:8px;
+  padding:14px 38px;
   border-radius:999px;
   border:1px solid #4169e1;
   background:#000c;
   color:#4169e1;
   font-weight:700;
-  font-size:1.05em;
+  font-size:1.1em;
   cursor:pointer;
   transition:.3s;
-  box-shadow:0 0 18px #4169e1aa;
+  box-shadow:0 0 22px #4169e1aa;
   backdrop-filter:blur(12px);
 }
+
 .btn:hover{
   background:#4169e1;
   color:#000;
-  transform:scale(1.08);
-  box-shadow:0 0 45px #4169e1;
+  transform:scale(1.12);
+  box-shadow:0 0 60px #4169e1;
 }
-.btn.dead{
-  opacity:.35;
-  pointer-events:none;
-  box-shadow:none;
-}
+
 #games{
   min-height:100vh;
-  padding:50px 20px;
-  background:#000b;
-  animation:fade .4s ease;
+  padding:40px 20px;
+  background:#000c;
+  animation:fade .5s ease;
 }
+
 #search{
   width:90%;
   max-width:640px;
-  padding:16px 26px;
+  padding:18px 28px;
   border-radius:999px;
   border:1px solid #4169e1;
-  background:#000c;
+  background:#000d;
   color:#4169e1;
-  font-size:16px;
-  margin-bottom:30px;
+  font-size:17px;
+  margin-bottom:35px;
   outline:none;
-  box-shadow:0 0 25px #4169e1aa;
-  transition:.3s;
+  box-shadow:0 0 30px #4169e1aa;
 }
-#search:focus{box-shadow:0 0 40px #4169e1}
+
 #grid{
   display:flex;
   flex-wrap:wrap;
   justify-content:center;
-  gap:16px;
+  gap:18px;
 }
+
 .card{
-  animation:spawn .45s ease both;
+  animation:spawn .4s ease both;
 }
-object, iframe{
+
+object{
   width:100%;
   height:100vh;
   border:none;
-  animation:fade .35s ease;
 }
+
 .scan{
   position:fixed;
   inset:0;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:1.2em;
-  letter-spacing:2px;
+  font-size:1.6em;
+  letter-spacing:3px;
   background:#000;
   color:#4169e1;
-  text-shadow:0 0 20px #4169e1;
+  text-shadow:0 0 40px #4169e1;
   animation:pulse 1.2s infinite;
+  z-index:5;
 }
+
+#backBtn{
+  position:fixed;
+  top:20px;
+  left:20px;
+  z-index:10;
+  padding:10px 26px;
+  border-radius:999px;
+  border:1px solid #4169e1;
+  background:#000c;
+  color:#4169e1;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 0 25px #4169e1;
+  transition:.3s;
+}
+
+#backBtn:hover{
+  background:#4169e1;
+  color:#000;
+  transform:scale(1.1);
+}
+
 @keyframes fade{from{opacity:0}to{opacity:1}}
-@keyframes spawn{from{opacity:0;transform:scale(.88)}to{opacity:1}}
-@keyframes pulse{0%{opacity:.35}50%{opacity:1}100%{opacity:.35}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes spawn{from{opacity:0;transform:scale(.85)}to{opacity:1}}
+@keyframes pulse{0%{opacity:.3}50%{opacity:1}100%{opacity:.3}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
 </style>
 </head>
 
 <body>
+
 <h1>Sovva Studios</h1>
 <div>
   <button class="btn" id="gamesBtn">Games</button>
@@ -112,56 +140,71 @@ object, iframe{
 </div>
 
 <script>
-let games=[], dead=new Set();
+let games=[]
 
 fetch("https://raw.githubusercontent.com/NotRainnixx/SovvaGames/refs/heads/main/games")
-  .then(r => r.text())
-  .then(t => games = Function('"use strict";return['+t+']')().sort((a,b)=>a.name.localeCompare(b.name)));
+  .then(r=>r.text())
+  .then(t=>games=Function('"use strict";return['+t+']')().sort((a,b)=>a.name.localeCompare(b.name)))
 
-blankBtn.onclick = () => {
-  const w = open("about:blank");
-  w.document.write(document.documentElement.outerHTML);
-  w.document.close();
-};
+blankBtn.onclick=()=>{
+  const w=open("about:blank")
+  w.document.write(document.documentElement.outerHTML)
+  w.document.close()
+}
 
-gamesBtn.onclick = () => {
-  document.body.innerHTML = "";
-  const c = document.createElement("div");
-  c.id = "games";
-  const s = document.createElement("input");
-  s.id = "search";
-  s.placeholder = "Search games…";
-  const grid = document.createElement("div");
-  grid.id = "grid";
+function loadMenu(){
+  location.reload()
+}
 
-  const openGame = g => {
-    document.body.innerHTML = '<div class="scan">LOADING GAME</div>';
-    const o = document.createElement("object");
-    o.data = g.url;
-    o.type = "text/html";
-    document.body.innerHTML = "";
-    document.body.append(o);
-  };
+function openGame(g){
+  document.body.innerHTML='<div class="scan">LOADING GAME</div>'
+  setTimeout(()=>{
+    document.body.innerHTML=""
+    const back=document.createElement("button")
+    back.id="backBtn"
+    back.textContent="← Back"
+    back.onclick=loadMenu
+    const o=document.createElement("object")
+    o.data=g.url
+    document.body.append(back,o)
+  },800)
+}
 
-  const draw = l => {
-    grid.innerHTML = "";
-    l.forEach(g => {
-      const d = document.createElement("div");
-      d.className = "card";
-      const b = document.createElement("button");
-      b.className = "btn" + (dead.has(g.name) ? " dead" : "");
-      b.textContent = g.name;
-      b.onclick = () => openGame(g);
-      d.append(b);
-      grid.append(d);
-    });
-  };
+gamesBtn.onclick=()=>{
+  document.body.innerHTML=""
+  const c=document.createElement("div")
+  c.id="games"
+  const s=document.createElement("input")
+  s.id="search"
+  s.placeholder="Search games…"
+  const grid=document.createElement("div")
+  grid.id="grid"
 
-  s.oninput = () => draw(games.filter(g => g.name.toLowerCase().includes(s.value.toLowerCase())));
-  c.append(s, grid);
-  document.body.append(c);
-  draw(games);
-};
+  function draw(list){
+    grid.innerHTML=""
+    list.forEach(g=>{
+      const d=document.createElement("div")
+      d.className="card"
+      const b=document.createElement("button")
+      b.className="btn"
+      b.textContent=g.name
+      b.onclick=()=>openGame(g)
+      d.append(b)
+      grid.append(d)
+    })
+  }
+
+  s.oninput=()=>draw(games.filter(g=>g.name.toLowerCase().includes(s.value.toLowerCase())))
+
+  c.append(s,grid)
+  document.body.append(c)
+  draw(games)
+}
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape") loadMenu()
+})
 </script>
+
 </body>
 </html>
