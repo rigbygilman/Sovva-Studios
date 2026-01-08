@@ -140,69 +140,92 @@ object{
 </div>
 
 <script>
-let games=[]
+let games = []
+const originalHTML = document.body.innerHTML
 
 fetch("https://raw.githubusercontent.com/NotRainnixx/SovvaGames/refs/heads/main/games")
-  .then(r=>r.text())
-  .then(t=>games=Function('"use strict";return['+t+']')().sort((a,b)=>a.name.localeCompare(b.name)))
+  .then(r => r.text())
+  .then(t => games = Function('"use strict";return[' + t + ']')().sort((a,b)=>a.name.localeCompare(b.name)))
 
-blankBtn.onclick=()=>{
-  const w=open("about:blank")
+blankBtn.onclick = () => {
+  const w = open("about:blank")
   w.document.write(document.documentElement.outerHTML)
   w.document.close()
 }
 
 function loadMenu(){
-  location.reload()
+  document.body.innerHTML = originalHTML
+  bindButtons()
 }
 
 function openGame(g){
-  document.body.innerHTML='<div class="scan">LOADING GAME</div>'
+  document.body.innerHTML = '<div class="scan">LOADING GAME</div>'
+
   setTimeout(()=>{
-    document.body.innerHTML=""
-    const back=document.createElement("button")
-    back.id="backBtn"
-    back.textContent="← Back"
-    back.onclick=loadMenu
-    const o=document.createElement("object")
-    o.data=g.url
-    document.body.append(back,o)
+    document.body.innerHTML = ""
+
+    const back = document.createElement("button")
+    back.id = "backBtn"
+    back.textContent = "← Back"
+    back.onclick = loadMenu
+
+    const o = document.createElement("object")
+    o.data = g.url
+
+    document.body.append(back, o)
   },800)
 }
 
-gamesBtn.onclick=()=>{
-  document.body.innerHTML=""
-  const c=document.createElement("div")
-  c.id="games"
-  const s=document.createElement("input")
-  s.id="search"
-  s.placeholder="Search games…"
-  const grid=document.createElement("div")
-  grid.id="grid"
+function openGames(){
+  document.body.innerHTML = ""
+
+  const c = document.createElement("div")
+  c.id = "games"
+
+  const s = document.createElement("input")
+  s.id = "search"
+  s.placeholder = "Search games…"
+
+  const grid = document.createElement("div")
+  grid.id = "grid"
 
   function draw(list){
-    grid.innerHTML=""
+    grid.innerHTML = ""
     list.forEach(g=>{
-      const d=document.createElement("div")
-      d.className="card"
-      const b=document.createElement("button")
-      b.className="btn"
-      b.textContent=g.name
-      b.onclick=()=>openGame(g)
+      const d = document.createElement("div")
+      d.className = "card"
+
+      const b = document.createElement("button")
+      b.className = "btn"
+      b.textContent = g.name
+      b.onclick = () => openGame(g)
+
       d.append(b)
       grid.append(d)
     })
   }
 
-  s.oninput=()=>draw(games.filter(g=>g.name.toLowerCase().includes(s.value.toLowerCase())))
+  s.oninput = () => draw(games.filter(g => g.name.toLowerCase().includes(s.value.toLowerCase())))
 
-  c.append(s,grid)
+  c.append(s, grid)
   document.body.append(c)
+
   draw(games)
 }
 
-document.addEventListener("keydown",e=>{
-  if(e.key==="Escape") loadMenu()
+function bindButtons(){
+  document.getElementById("gamesBtn").onclick = openGames
+  document.getElementById("blankBtn").onclick = () => {
+    const w = open("about:blank")
+    w.document.write(document.documentElement.outerHTML)
+    w.document.close()
+  }
+}
+
+bindButtons()
+
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape") loadMenu()
 })
 </script>
 
