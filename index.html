@@ -43,6 +43,8 @@ h1{
 }
 
 .btn:hover{
+  border-radius:999px;
+  border:1px solid #4169e1;
   background:#4169e1;
   color:#000;
   transform:scale(1.12);
@@ -133,7 +135,7 @@ object{
 
 <body>
 
-<h1>Sovva Studios</h1> <h7>v4</h7>
+<h1>Sovva Studios v4</h1>
 <div>
   <button class="btn" id="gamesBtn">Games</button>
   <button class="btn" id="blankBtn">Open in about:blank</button>
@@ -224,9 +226,11 @@ function bindButtons(){
 
 bindButtons()
 
+/*
 document.addEventListener("keydown", e => {
   if(e.key === "Escape") loadMenu()
 })
+*/
 </script>
 
 </body>
